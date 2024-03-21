@@ -1,0 +1,241 @@
+<?php
+session_start();
+
+// Database connection parameters
+$db_user = "ccoss";      // Replace with your Oracle database username
+$db_pass = "sify123";    // Replace with your Oracle database password
+$db_host = "223.31.220.12:1522/CRPCLONE";  // Replace with your database host and service name
+
+// Establish connection
+$conn = oci_connect($db_user, $db_pass, $db_host);
+
+if (!$conn) {
+    echo "Database connection failed.";
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["loginUsername"];
+    $password = $_POST["loginPassword"];
+
+    // Perform SQL query to check if the email and password exist in the database
+    $sql = "SELECT * FROM registration_master WHERE Email = :email AND Pass_word = :password";
+    $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ":email", $email); 
+    oci_bind_by_name($stmt, ":password", $password); 
+    oci_execute($stmt);
+
+    // Fetch the result
+    $row = oci_fetch_assoc($stmt);
+
+    if ($row) {
+        // Check for default password and redirect accordingly
+        if ($password === 'sify123') {
+            // Set session variables to identify the user for password change
+            $_SESSION['email'] = $email;
+            header("Location: change_password.php");
+            exit();
+        } else {
+            // Redirect to admin.html for subsequent logins
+            header("Location: admin.html");
+            exit();
+        }
+    } else {
+        echo "Invalid credentials. Please try again.";
+    }
+
+    oci_free_statement($stmt);
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- Add security headers in your web server's configuration -->
+    <!-- Content Security Policy (CSP), X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, etc. -->
+    <style>
+        /* Reset some default styles */
+        body, h1, p, ul, li {
+    background-image: url('greeny.jpg');
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+	color : #9c1a45;
+	font-size:12px;
+	font-weight:bold;
+}
+
+        /* Apply styles to the header */
+        header {
+            background-color: #333;
+            color: black;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Style the navigation menu */
+        nav {
+            background-color: #444;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* Style the footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Style the login container */
+    .login-container {
+    background-color: transparent;
+    color: white;
+    box-shadow: 0px 1px 60px 10px grey; /* Change shadow color to #85C323 */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    text-align: center;
+    margin: 0 auto;
+	position: relative; /* Set the position to relative */
+    margin-top: 65px; /* Adjusted margin-top to move it up further */
+	margin-right: 150px;
+    }
+
+
+        /* Style the labels inside the login container */
+        .login-container label {
+            font-size: 18px;
+			width:12px;
+            margin-bottom: 10px;
+            display: block;
+            display: block;        
+            text-align: left; /* Align labels to the left */
+        }
+
+        /* Style the login form */
+        .login-form h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .login-form button[type="submit"] {
+            background-color: #85C323;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 3px;
+			margin-top: 20px;
+        }
+
+        .login-form button[type="submit"]:hover {
+            background-color: #007bff;
+        }
+
+        .login-form p {
+            font-size: 14px;
+        }
+
+        .login-form a {
+    color: #007bff;
+    text-decoration: none;
+    font-family: Calibri, sans-serif; /* Make sure to specify a fallback font family */
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Adjust the values as needed */
+}
+
+        .login-form a:hover {
+            text-decoration: underline;
+			color : #85C323;
+        }
+		
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h1 style="font-size: 36px; color: #fff; text-transform: uppercase; text-shadow: 2px 2px 0 grey, 2px 2px 0 #85C323,-webkit-text-stroke: 2px grey; text-stroke: 2px grey;">Sify NexGen Login</h1>
+            <!-- Use HTTPS for form submission -->
+            <form id="loginForm" action="/login" method="POST">
+              <label for="loginUsername" style="color: white; font-family: Calibri, sans-serif; transition: color 0.3s;">Email_ID</label>
+<input type="text" id="loginUsername" name="loginUsername" required><br><br>
+
+<label for="loginPassword" style="color: white; font-family: Calibri, sans-serif;">Password</label>
+<input type="password" id="loginPassword" name="loginPassword" required>
+
+
+
+                <button type="submit">Login</button>
+            </form>
+
+            <p style="font-size: 15px; color: white;margin-top: 30px;">Don't have an account? <a href="http://223.31.220.17/nexgen/register.html">Register</a></p>
+        </div>
+    </div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get the email and password from the form
+        const email = document.getElementById("loginUsername").value;
+        const password = document.getElementById("loginPassword").value;
+
+        // Example of making an API request with fetch
+        fetch('login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', // Use appropriate content type
+            },
+            body: `loginUsername=${email}&loginPassword=${password}`, // Serialize form data
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the provided URL
+            } else {
+                // Handle unsuccessful login (display error message, etc.)
+                console.log("Login failed");
+            }
+        })
+        .catch(error => {
+            // Handle network or server errors here
+            console.error(error);
+        });
+    });
+</script>
+</body>
+</html>
