@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">                          
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Admin</title>
+	 <!-- Call the function to include the admin header -->
+    <?php includeAdminHeader(); ?>
+    <style>
+        body {
+            background-image: URL('tower2.jpg');
+            background-size: Cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+    
+        ul {
+            margin: 0;
+            padding: 0;
+            background:transparent;
+            font-family: Calibri;
+            font-weight: normal;
+            font-size: 13.5px;
+        }
+    
+        li {
+            color: #89CFF0;
+        }
+    
+        div {
+            color: black;
+        }
+    
+        /* Apply styles to the header */
+        header {
+            background: transparent;
+            text-align: center;
+            padding: 10px;
+        }
+    
+        /* Change the text color of h1 */
+        header h1 {
+            margin: 0;
+            padding: 0;
+            color: white;
+            background: transparent;
+            background-clip: text;
+            display: inline-block;
+            padding: 0.1px;
+            font-weight: bold;
+        }
+    
+        /* Add a transition property for color and font-weight with a delay */
+        nav li > a, .dropdown-content a {
+            font-size: 13.5px;
+            transition: color 0.3s ease 0.2s, font-weight 0.3s ease 0.2s, text-shadow 0.3s ease 0.2s;
+            font-weight: bold;
+            font-family: Calibri;
+        }
+    
+        /* Remove immediate hover effect */
+        nav li:hover > a, .dropdown:hover > a {
+            transition-delay: 0s;
+            color: #89CFF0;
+            font-weight: bold;
+            background: transparent;
+            box-sizing: border-box;
+            border: 0.5px solid white; /* Adjusted border size */  
+        }
+    
+        /* Apply the hover effect with a delay when not hovered */
+        nav li:not(:hover) > a, .dropdown:not(:hover) > a {
+            color: white;
+            text-shadow: none;
+        }
+    
+        /* Apply the hover effect when the submenu is not hovered */
+        nav .dropdown-content a {
+            transition: color 0.1s ease 0.1s, font-weight 0.1s ease 0.1s;
+        }
+    
+        /* Remove immediate hover effect for submenu items */
+        nav li:hover .dropdown-content a:hover, .submenu a:hover {
+            transition-delay: 0s;
+            background-color: transparent;
+            color: #89CFF0;
+        }
+    
+        /* Apply the hover effect */
+        nav li:hover > a, .dropdown:hover > a {
+            font-weight: bold;
+        }
+    
+        /* Apply the hover effect for submenu items */
+        nav li:hover .dropdown-content a:hover, .submenu a:hover {
+            font-weight: bold;
+        }
+    
+        /* Style the header content */
+        .header-content {
+            z-index: 100;
+        }
+    
+     /* Style the navigation menu */
+    nav {
+        color: #fff;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    
+    .sify-text {
+        position: absolute;
+        top: 38%;
+        right: 14%;
+        transform: translate(50%, -50%);
+        font-size: 165px; /* Adjust as needed */
+        color: rgba(173, 255, 47, 0.5); /* Adjust the transparency and color */
+    }
+
+
+        /* Adjust justify-content to space menu items evenly */
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            background: Transparent;
+        }
+    
+        /* Style header menu items */
+        nav li {
+            margin: 0;
+            position: relative;
+            border: 1px solid white;
+        }
+    
+        /* Style the unique background color (#96D437) on hover for menu items */
+        nav li:hover > a, header:hover > a {
+            background-color: transparent;
+            color: #89CFF0;
+            font-weight: bold;
+            box-shadow: 8px 6px 0 rgba(255, 255, 255, 0.2);
+        }
+    
+    nav a {
+        text-decoration: none;
+        font-weight: bold;
+        color: white;
+        position: relative;
+        padding: 4.7px 20px; /* Adjust the padding to control background size */
+        background-color: transparent; /* Set the background color */
+        box-shadow: 8px 6px 0 rgba(255, 255, 255, 0.5);
+        border: 1px solid #89CFF0;
+    }
+    
+        /* Style the unique background color (#96D437) on hover for submenu items */
+        nav li:hover .dropdown-content a:hover, .submenu a:hover {
+            background-color: transparent;
+            color: #89CFF0;
+        }
+    
+        /* Style the dropdown button */
+        .dropdown {
+            position: relative;
+            margin-right: 20px;
+        }
+    
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: transparent;
+            min-width: 160px;
+            white-space: nowrap;
+            padding: 8px;
+        }
+    
+     /* Adjust top value for submenu-indicator */
+    .submenu-indicator {
+        width: 2px;
+        height: 2px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center; /* Centered submenu indicator */
+        position: absolute;
+        left: calc(100% - 20px);
+        top: 50%; /* Adjusted top value */
+        transform: translateY(20%);
+    }
+    
+        .submenu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            display: none;
+            z-index: 1;
+            padding: 4px;
+            background-color: transparent;
+        }
+    
+        /* Style the dropdown links */
+        .dropdown-content a, .submenu a {
+            color: white;
+            padding: 10px 10px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            width: auto;
+        }
+    
+        /* Style for the video background */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 13%;
+            height: auto;
+            z-index: 9999;
+        }
+    
+        /* Style for the content container */
+        #content-container {
+            padding: 20px;
+        }
+    
+        /* Show the submenu when hovering over the parent dropdown */
+        .dropdown:hover .dropdown-content {
+            display: block;
+            width: auto;
+        }
+    
+        /* Expand the width of the "Orders" dropdown */
+        .submenu .submenu {
+            width: auto;
+        }
+        
+        /* Add specific styles for the "Migrated Orders" submenu under "STL" */
+    nav li:hover .dropdown-content .submenu .submenu {
+        background-color: transparent; /* Set background color for the "Migrated Orders" submenu */
+    }
+    nav li:hover .dropdown-content .submenu .submenu a {
+        background-color: transparent; /* Set background for submenu items within "Migrated Orders" */
+        color: #fff;
+    }
+    
+    /* Ensure the submenu indicator is visible */
+    nav li:hover .dropdown-content .submenu .submenu a:hover {
+        background-color: transparent;
+        color: #96D437;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="sify-text">SIFY</div>
+        <!-- Video background in the top left corner -->
+        <video autoplay loop muted class="video-bg">
+            <source src="Sify-logo-animation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Header content -->
+        <div class="content-container">
+            <h1 style="color: transparent; text-shadow: none; font-weight: bold;">USER MANAGEMENT</h1>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <div><a href="http://223.31.220.17/nexgen/home.html">Home</a></div>
+            <div class="dropdown">
+                <a href="http://apex.sify.net:8080/apex/f?p=197:101">Reports</a>
+                <ul class="dropdown-content">
+                    <li><a href="https://sifyconnect.sify.net/arm/#/login" target="_blank">ARM Login</a></li>
+                    <li><a href="https://sifycpq.bigmachines.com/commerce/display_company_profile.jsp" target="_blank">CPQ Login</a></li>
+                    <li><a href="http://crm.sify.net/" target="_blank">CRM Login</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a href="#">User Details</a>
+                <ul class="dropdown-content">
+                    <li>
+                        <a href="http://223.31.220.17/nexgen/register.php">Registered Users</a>
+                    <li>
+                        <a href="#">Activated Users</a>
+                    </li>
+                    <li>
+                        <a href="#">Inactivated Users</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a href="#">ERP Responsibilities</a>
+                <ul class="dropdown-content">
+                    <!-- "Orders" dropdown -->
+                    <li class="dropdown">
+                        <a href="http://223.31.220.17/nexgen/matrix.php">Request Responsibilities</a>
+                    </li>
+                    <!-- Add submenus for "Migrated Orders" here -->
+                    <li class="dropdown">
+                        <a href="http://223.31.220.17/nexgen/master_data.php">Responsibility Termination</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a href="#">SDS</a>
+                <ul class="dropdown-content">
+                    <li><a href="#">Customers</a></li>
+                    <li><a href="#">Sales Group</a></li>
+                </ul>
+            </div>
+            <div><a href="login.php">Logout</a></div>
+        </ul>
+    </nav>
+
+    <!-- Content container where dynamic content will be loaded -->
+    <div id="content-container">
+        <!-- Initial content or empty -->
+    </div>
+
+    <!-- JavaScript to toggle dropdown visibility -->
+    <script>
+        var dropdowns = document.querySelectorAll('.dropdown');
+
+        dropdowns.forEach(function (dropdown) {
+            var content = dropdown.querySelector('.dropdown-content');
+
+            dropdown.addEventListener('mouseover', function () {
+                content.style.display = 'block';
+            });
+
+            dropdown.addEventListener('mouseout', function (e) {
+                if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown')) {
+                    content.style.display = 'none';
+                }
+            });
+        });
+
+        // Handle submenu visibility separately
+        var submenus = document.querySelectorAll('.submenu');
+
+        submenus.forEach(function (submenu) {
+            var parentMenuItem = submenu.parentElement;
+            var submenuIndicator = parentMenuItem.querySelector('.submenu-indicator');
+
+            parentMenuItem.addEventListener('mouseover', function () {
+                submenu.style.display = 'block';
+                submenuIndicator.style.display = 'block';
+            });
+
+            parentMenuItem.addEventListener('mouseout', function (e) {
+                if (!e.relatedTarget || !e.relatedTarget.closest('.submenu')) {
+                    submenu.style.display = 'none';
+                    submenuIndicator.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
