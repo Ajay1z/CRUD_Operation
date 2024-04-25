@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)http://223.31.220.17/learning/hero.php -->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <style>
+            .page-header {
+                background-color: black;
+                color: yellow;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .image-container {
+                max-width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .image {
+                width: 400px;
+                height: auto;
+                margin: 10px;
+                position: relative;
+            }
+
+            .image-title {
+                text-align: center;
+                font-weight: bold;
+                font-family: 'Batman', sans-serif;
+                margin-top: 5px;
+            }
+
+            .image-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                /* Adjust the background color and opacity */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .image:hover .image-overlay {
+                opacity: 1;
+            }
+
+            .download-link {
+                text-decoration: none;
+                color: white;
+                font-weight: bold;
+                background-color: #0077b5;
+                /* Customize the download link style */
+                padding: 5px 10px;
+                border-radius: 5px;
+            }
+        </style>
+        <style id="custom-cursor" type="text/css">
+            body button,
+            body [type='button'],
+            body input[type='reset'],
+            body input[type='submit'],
+            body [role="button"],
+            ::-webkit-search-cancel-button,
+            ::-webkit-search-decoration,
+            ::-webkit-scrollbar-button,
+            ::-webkit-file-upload-button,
+            [role^=button],
+            .cc_pointer,
+            [type="search"]::-webkit-search-cancel-button,
+            a,
+            select,
+            [type="search"]::-webkit-search-decoration,
+            .paper-button,
+            .ytp-progress-bar-container,
+            input[type=submit],
+            :link,
+            :visited,
+            a>*,
+            img,
+            ::-webkit-scrollbar-button,
+            .ogdlpmhglpejoiomcodnpjnfgcpmgale_pointer,
+            ::-webkit-file-upload-button,
+            .ytp-volume-panel,
+            #myogdlpmhglpejoiomcodnpjnfgcpmgale .icon,
+            body .custom-cursor-on-hover {
+                cursor: url("data:image/png;base64,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") 13 1, pointer !important;
+            }
+
+            html,
+            body,
+            body select,
+            body .custom-cursor-default-hover {
+                cursor: url("data:image/png;base64,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") 1 1, auto !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1 style="font-family: &#39;Batman&#39;, sans-serif;">Batman</h1>
+        </div>
+        <div class="image-container">
+            <div class="image">
+                <img src="./hero.php_files/1297486.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/1297486.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">1297486</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/263628.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/263628.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">263628</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/606418.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/606418.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">606418</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/8057405.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/8057405.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">8057405</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/9020102.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/9020102.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">9020102</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Bat.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Bat.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">Bat</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Batman-Doom-Still-Publicity-H-2022.jpg.webp" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Batman-Doom-Still-Publicity-H-2022.jpg.webp" download="">Download</a>
+                </div>
+                <div class="image-title">Batman-Doom-Still-Publicity-H-2022.jpg</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Batman1.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Batman1.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">Batman1</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Batman_Begins.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Batman_Begins.gif" download="">Download</a>
+                </div>
+                <div class="image-title">Batman_Begins</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Doggy_Boy.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Doggy_Boy.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">Doggy_Boy</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/HD-wallpaper-batman-dark.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/HD-wallpaper-batman-dark.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">HD-wallpaper-batman-dark</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Tech2.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Tech2.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">Tech2</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/UP_Logo.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/UP_Logo.gif" download="">Download</a>
+                </div>
+                <div class="image-title">UP_Logo</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/Welcome.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/Welcome.gif" download="">Download</a>
+                </div>
+                <div class="image-title">Welcome</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/af666eba1e8c6382da2283efb9f6f42d.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/af666eba1e8c6382da2283efb9f6f42d.gif" download="">Download</a>
+                </div>
+                <div class="image-title">af666eba1e8c6382da2283efb9f6f42d</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/batman.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/batman.gif" download="">Download</a>
+                </div>
+                <div class="image-title">batman</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/batman.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/batman.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">batman</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/c09abeaae50b2b922e18a3ee47ba427c.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/c09abeaae50b2b922e18a3ee47ba427c.gif" download="">Download</a>
+                </div>
+                <div class="image-title">c09abeaae50b2b922e18a3ee47ba427c</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/colorful_batman_art_shades_4k_hd_the_batman.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/colorful_batman_art_shades_4k_hd_the_batman.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">colorful_batman_art_shades_4k_hd_the_batman</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/illustration.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/illustration.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">illustration</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/log_home.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/log_home.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">log_home</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/login_logout.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/login_logout.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">login_logout</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/sify_logo.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/sify_logo.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">sify_logo</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/sword.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/sword.gif" download="">Download</a>
+                </div>
+                <div class="image-title">sword</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/sword_boy.gif" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/sword_boy.gif" download="">Download</a>
+                </div>
+                <div class="image-title">sword_boy</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/tech.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/tech.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">tech</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/thumbbig-1330752.webp" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/thumbbig-1330752.webp" download="">Download</a>
+                </div>
+                <div class="image-title">thumbbig-1330752</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/thumbbig-898381.webp" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/thumbbig-898381.webp" download="">Download</a>
+                </div>
+                <div class="image-title">thumbbig-898381</div>
+            </div>
+            <div class="image">
+                <img src="./hero.php_files/wallpapersden.com_batman-4k-dark-night_3840x2006.jpg" alt="Image" oncontextmenu="return false;" ondragstart="return false;" style="max-width: 400px;">
+                <div class="image-overlay">
+                    <a class="download-link" href="./hero.php_files/wallpapersden.com_batman-4k-dark-night_3840x2006.jpg" download="">Download</a>
+                </div>
+                <div class="image-title">wallpapersden.com_batman-4k-dark-night_3840x2006</div>
+            </div>
+        </div>
+    </body>
+</html>
